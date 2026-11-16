@@ -1,4 +1,4 @@
-pub use citro3d::texture::ColourFormat;
+pub use citro3d::texture::ColorFormat;
 
 use crate::pixel_type::PixelType;
 
@@ -13,7 +13,7 @@ impl Tex {
     }
 
     #[doc(alias = "C3D_TexInit")]
-    pub fn new(width: u16, height: u16, format: ColourFormat) -> Self {
+    pub fn new(width: u16, height: u16, format: ColorFormat) -> Self {
         let width = (width + 7) & !7;
         let height = (height + 7) & !7;
         let mut texture = std::mem::MaybeUninit::<citro3d_sys::C3D_Tex>::uninit();
@@ -32,7 +32,7 @@ impl Tex {
         let h = unsafe { self.0.__bindgen_anon_2.__bindgen_anon_1.height as usize };
         let w = unsafe { self.0.__bindgen_anon_2.__bindgen_anon_1.width as usize };
         let fmt = self.0._bitfield_1.get(0, 4) as u8;
-        let fmt = ColourFormat::try_from(fmt).unwrap();
+        let fmt = ColorFormat::try_from(fmt).unwrap();
         debug_assert_eq!(M % 8, 0);
         debug_assert_eq!(N % 8, 0);
         debug_assert_eq!(h, M);
@@ -54,7 +54,7 @@ impl Tex {
         let h = unsafe { self.0.__bindgen_anon_2.__bindgen_anon_1.height } as usize;
         let w = unsafe { self.0.__bindgen_anon_2.__bindgen_anon_1.width } as usize;
         let fmt = self.0._bitfield_1.get(0, 4) as u8;
-        let fmt = ColourFormat::try_from(fmt).unwrap();
+        let fmt = ColorFormat::try_from(fmt).unwrap();
         debug_assert_eq!(texture.len(), h * w * bytes_per_pixel(fmt));
         debug_assert_eq!(h % 8, 0);
         debug_assert_eq!(w % 8, 0);
@@ -205,17 +205,17 @@ fn addr_is_vram(out: *mut std::ffi::c_void) -> bool {
     (ctru_sys::OS_VRAM_VADDR..ctru_sys::OS_VRAM_VADDR + ctru_sys::OS_VRAM_SIZE).contains(&vaddr)
 }
 
-fn bytes_per_pixel(fmt: ColourFormat) -> usize {
+fn bytes_per_pixel(fmt: ColorFormat) -> usize {
     match fmt {
-        ColourFormat::Rgba8 => 4,
-        ColourFormat::Rgb8 => 3,
-        ColourFormat::Rgba4
-        | ColourFormat::La8
-        | ColourFormat::Hilo8
-        | ColourFormat::Rgba5551
-        | ColourFormat::Rgb565 => 2,
-        ColourFormat::L8 | ColourFormat::A8 | ColourFormat::La4 | ColourFormat::Etc1A4 => 1,
-        ColourFormat::L4 | ColourFormat::A4 | ColourFormat::Etc1 => 1, // 0.5?
+        ColorFormat::Rgba8 => 4,
+        ColorFormat::Rgb8 => 3,
+        ColorFormat::Rgba4
+        | ColorFormat::La8
+        | ColorFormat::Hilo8
+        | ColorFormat::Rgba5551
+        | ColorFormat::Rgb565 => 2,
+        ColorFormat::L8 | ColorFormat::A8 | ColorFormat::La4 | ColorFormat::Etc1A4 => 1,
+        ColorFormat::L4 | ColorFormat::A4 | ColorFormat::Etc1 => 1, // 0.5?
     }
 }
 
